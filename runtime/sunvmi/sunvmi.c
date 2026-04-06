@@ -207,6 +207,9 @@ getCallerClassJEP176Iterator(J9VMThread *currentThread, J9StackWalkState *walkSt
 
 	Assert_SunVMI_mustHaveVMAccess(currentThread);
 
+    J9UTF8  *className = J9ROMCLASS_CLASSNAME(currentClass->romClass);
+    Trc_SunVMI_GetCallerClass_Frame((UDATA) walkState->userData1, (UDATA) J9UTF8_LENGTH(className), J9UTF8_DATA(className));
+
 	if (J9_ARE_ALL_BITS_SET(J9_ROM_METHOD_FROM_RAM_METHOD(walkState->method)->modifiers, J9AccMethodFrameIteratorSkip)
 #if defined(J9VM_OPT_OPENJDK_METHODHANDLE) && (JAVA_SPEC_VERSION <= 11)
 			/* Do not skip InjectedInvoker classes despite them having the J9AccMethodFrameIteratorSkip

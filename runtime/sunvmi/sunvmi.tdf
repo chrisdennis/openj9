@@ -336,3 +336,5 @@ TraceException=Trc_SunVMI_GetClassAccessFlags_NullClassRef Overhead=1 Level=3 Te
 
 TraceEvent=Trc_SunVMI_AllocateRomClass  Overhead=1 Level=3 Template="Allocate temporary ROM class size = %d"
 TraceEvent=Trc_SunVMI_AllocateRomClassFailed  Overhead=1 Level=3 Template="Allocate temporary ROM class failed"
+
+TraceEvent=Trc_SunVMI_GetCallerClass_Frame NoEnv Overhead=1 Level=3 Template="JVM_GetCallerClass(depth=%d, class=%.*s)"
