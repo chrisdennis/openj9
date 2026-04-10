@@ -7169,6 +7169,12 @@ TR::Node *TR_J9VM::inlineNativeCall(TR::Compilation *comp, TR::TreeTop *callNode
                         = reinterpret_cast<J9Class *>(comp->getInlinedResolvedMethod(callerIndex)->containingClass());
                 }
 
+                int32_t classNameLength;
+                char *className
+                    = getClassNameChars(reinterpret_cast<TR_OpaqueClassBlock *>(callerClass), classNameLength);
+                log->printf("O^O inlineNativeCall: inline class load [%p] frame %d [callerIndex=%d] class=%.*s\n",
+                        callNode, targetInlineDepth, callerIndex, classNameLength, className);
+
                 if (callerIndex == -1)
                     break;
 
@@ -7179,6 +7185,7 @@ TR::Node *TR_J9VM::inlineNativeCall(TR::Compilation *comp, TR::TreeTop *callNode
                         // See the VM implementation of `getCallerClassIterator` for details.
                         skipFrameAtDepth0 = transformJlrMethodInvoke(callerMethod, callerClass);
                         if (skipFrameAtDepth0) {
+                            log->printf("O^O inlineNativeCall: inline class load [%p] skipping frame %d\n", callNode, targetInlineDepth);
                             callerIndex = comp->getInlinedCallSite(callerIndex)._byteCodeInfo.getCallerIndex();
                             continue;
                         }
@@ -7200,6 +7207,9 @@ TR::Node *TR_J9VM::inlineNativeCall(TR::Compilation *comp, TR::TreeTop *callNode
                         "O^O inlineNativeCall: inline class load [%p] of %.*s for '%s' at bytecode %d\n", callNode,
                         classNameLength, className, callNode->getSymbolReference()->getName(comp->getDebug()),
                         callNode->getByteCodeInfo().getByteCodeIndex())) {
+                    log->printf("O^O inlineNativeCall: inline class load [%p] of %.*s for '%s' at bytecode %d\n", callNode,
+                                                        classNameLength, className, callNode->getSymbolReference()->getName(comp->getDebug()),
+                                                        callNode->getByteCodeInfo().getByteCodeIndex());
                     TR::Node::recreate(callNode, TR::loadaddr);
                     callNode->removeAllChildren();
                     TR::SymbolReference *callerClassSymRef = comp->getSymRefTab()->findOrCreateClassSymbol(
